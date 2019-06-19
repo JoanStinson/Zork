@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Exit.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -127,6 +128,7 @@
     <ClInclude Include="Creature.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Exit.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Player.h" />

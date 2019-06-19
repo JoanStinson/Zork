@@ -1,14 +1,13 @@
 #include "Exit.h"
 
-//void Exit::Update()
-//{
-//}
+Direction Exit::GetDirection() {
+	return direction;
+}
 
 void Exit::SetLocked(bool locked) {
 	this->locked = locked;
 }
 
-bool Exit::IsLocked()
-{
+bool Exit::IsLocked() {
 	return locked;
 }

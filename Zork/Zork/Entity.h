@@ -1,26 +1,32 @@
 #pragma once
-#include <string>
-#include <list>
-#include "Entity.h"
-using namespace std;
-
-typedef enum EntityType {
-	NPC, PLAYER, EXIT, ROOM, ITEM
-};
+#include "Globals.h"
 
 class Entity {
-private:
+
+public:
+	explicit Entity(EntityType type, string name, string description);
+	virtual ~Entity();
+
+	string GetName();
+	string GetDescription();
+	EntityType GetType();
+	list<Entity*> contains;
+
+	void Insert(Entity* entity);
+	void Remove(Entity* entity);
+
+	virtual Direction GetDirection() { return Direction(); }
+	virtual void Update() = 0;
+	virtual const void Look();
+
+	bool operator == (const Entity& e) const { return type == e.type && name == e.name; }
+	bool operator != (const Entity& e) const { return !operator==(e); }
+
+protected:
 	EntityType type;
 	string name;
 	string description;
-	list<Entity*> entities;
-protected:
-	void Insert(Entity* entity);
-	void Remove(Entity* entity);
-public:
-	explicit Entity(EntityType type, string name, string description);
-	~Entity();
-	virtual void Update() = 0;
-	bool operator == (const Entity& e) const { return type == e.type && name == e.name; }
-	bool operator != (const Entity& e) const { return !operator==(e); }
+
+private:
+	static const map<EntityType, string> entitiesMap;
 };

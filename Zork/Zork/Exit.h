@@ -1,16 +1,9 @@
 #pragma once
-#include "Entity.h"
+#include "Globals.h"
 #include "Room.h"
 
-typedef enum Direction {
-	NORTH, EAST, SOUTH, WEST
-};
-
 class Exit : public Entity {
-	Direction direction;
-	Room* source;
-	Room* destination;
-	bool locked;
+
 public:
 	Exit(string name, string description, Direction direction, Room* source, Room* destination) : Entity(EntityType::EXIT, name, description) {
 		this->direction = direction;
@@ -18,8 +11,16 @@ public:
 		this->destination;
 		this->locked = false;
 	}
-	~Exit();
+
 	void Update(){}
+	Direction GetDirection();
 	void SetLocked(bool locked);
 	bool IsLocked();
+
+private:
+	Direction direction;
+	Room* source;
+	Room* destination;
+	bool locked;
+
 };

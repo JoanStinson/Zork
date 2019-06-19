@@ -1,43 +1,53 @@
 #include "World.h"
-#include "Room.h"
-#include "Player.h"
-#include "Exit.h"
-#include "NPC.h"
 
 World::World() {
 
 	// Create rooms
-	Room *room1 = new Room("Black Room", "This is a black room.");
-	Room *room2 = new Room("White Room", "This is a white room.");
-	Room *room3 = new Room("Yellow Room", "This is a yellow room.");
+	Room *room1 = new Room("BlackRoom", "This is a black room.");
+	Room *room2 = new Room("WhiteRoom", "This is a white room.");
+	Room *room3 = new Room("YellowRoom", "This is a yellow room.");
 
 	// Create player
-	Player *player = new Player("Joan", "I am the player.", room1);
+	this->player = new Player("Joan", "I am the player.", room1);
 
 	// Create exits
-	Exit *exitR1toR2 = new Exit("Exit to R2", "Exit to the white room.", Direction::EAST, room1, room2);
-	Exit *exitR2toR1 = new Exit("Exit to R1", "Exit to the black room.", Direction::WEST, room2, room1);
-	Exit *exitR1toR3 = new Exit("Exit to R3", "Exit to the yellow room.", Direction::WEST, room1, room3);
+	Exit *exitR1toR2 = new Exit("Window", "Exit to the white room.", Direction::EAST, room1, room2);
+	Exit *exitR2toR1 = new Exit("Window", "Exit to the black room.", Direction::WEST, room2, room1);
+	Exit *exitR1toR3 = new Exit("Door", "Exit to the yellow room.", Direction::WEST, room1, room3);
 	exitR1toR3->SetLocked(true);
-	Exit *exitR3toR1 = new Exit("Exit to R1", "Exit to the black room.", Direction::EAST, room3, room1);
+	Exit *exitR3toR1 = new Exit("Door", "Exit to the black room.", Direction::EAST, room3, room1);
 
 	// Create items
 	Item *key = new Item("Key", "This is a key.");
-	room2->InsertItem(key);
+	Item *rock = new Item("Rock", "A simple rock.");
 
 	// Create NPC
 	class NPC *npc = new class NPC("Pepito", "Buenos dias me llamo Pepito", room3);
 
-	// Add entities
+	// Add entities to Room 1
+	room1->Insert(exitR1toR2);
+	room1->Insert(exitR1toR3);
+	room1->Insert(rock);
+
+	// Add entities to Room 2
+	room2->Insert(exitR2toR1);
+	room2->Insert(key);
+
+	// Add entities to Room 3
+	room3->Insert(exitR3toR1);
+	room3->Insert(npc);
+
+	// Add all entities to world
 	entities.push_back(room1);
 	entities.push_back(room2);
 	entities.push_back(room3);
-	entities.push_back(player);
+	entities.push_back(this->player);
 	entities.push_back(exitR1toR2);
 	entities.push_back(exitR2toR1);
 	entities.push_back(exitR1toR3);
 	entities.push_back(exitR3toR1);
 	entities.push_back(key);
+	entities.push_back(rock);
 
 }
 
@@ -45,4 +55,61 @@ World::~World() {
 	for (Entity *e : entities)
 		delete e;
 	entities.clear();
+}
+
+void World::HandleInput(vector<string>& words) {
+
+	switch (words.size()) {
+		case 0:
+			cerr << "ERROR: Type something!" << endl;
+			break;
+		case 1:
+			cout << "Invalid word" << endl;
+			break;
+		case 2:
+			HandleAction(words);
+			break;
+		default:
+			cerr << "ERROR: Please type 2 words max!" << endl;
+			break;
+	}
+}
+
+void World::HandleAction(vector<string>& words) {
+
+	string actionName = words.at(0);
+	string actionParameter = words.at(1);
+
+	if (ACTION_LOOK == actionName || ACTION_SEE == actionName) {
+		this->player->Look(actionParameter);
+	}
+	else if (ACTION_GO == actionName || ACTION_WALK == actionName) {
+		this->player->Go(actionParameter);
+	}
+	else if (ACTION_TAKE == actionName || ACTION_GRAB == actionName) {
+		this->player->Take(actionParameter);
+	}
+	else if (ACTION_DROP == actionName || ACTION_LEAVE == actionName) {
+		this->player->Drop(actionParameter);
+	}
+	else if (ACTION_EQUIP == actionName || ACTION_ARM == actionName) {
+		this->player->Equip(actionParameter);
+	}
+	else if (ACTION_UNEQUIP == actionName || ACTION_UNARM == actionName) {
+		this->player->Unequip(actionParameter);
+	}
+	else if (ACTION_ATTACK == actionName || ACTION_FIGHT == actionName) {
+		this->player->Attack(actionParameter);
+	}
+	else if (ACTION_LOCK == actionName || ACTION_CLOSE == actionName) {
+		this->player->Lock(actionParameter);
+	}
+	else if (ACTION_UNLOCK == actionName || ACTION_OPEN == actionName) {
+		this->player->Unlock(actionParameter);
+	}
+	else if (ACTION_LOOT == actionName || ACTION_STEAL == actionName) {
+		this->player->Loot(actionParameter);
+	}
+	else
+		cout << "Invalid action, try again" << endl;
 }
