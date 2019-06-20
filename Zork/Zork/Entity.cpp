@@ -35,3 +35,19 @@ void Entity::Remove(Entity *entity) {
 const void Entity::Look() {
 	cout << name << ": " << description << endl;
 }
+
+int Entity::ShowItems(list<Entity*> entities) {
+	int count = 0;
+
+	// Search for items
+	for (Entity *e : entities) {
+
+		if (e->GetType() == EntityType::ITEM) {
+			string itemName = ToLowercase(e->GetName());
+			cout << "- " << itemName << endl;
+			count++;
+		}
+	}
+
+	return count;
+}

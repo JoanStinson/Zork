@@ -6,6 +6,8 @@
 #include "Exit.h"
 #include "NPC.h"
 
+#define ACTION_INVENTORY "inventory"
+
 #define ACTION_LOOK "look" 
 #define ACTION_SEE "see" 
 

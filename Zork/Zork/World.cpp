@@ -18,8 +18,10 @@ World::World() {
 	Exit *exitR3toR1 = new Exit("Door", "Exit to the black room.", Direction::EAST, room3, room1);
 
 	// Create items
-	Item *key = new Item("Key", "This is a key.");
-	Item *rock = new Item("Rock", "A simple rock.");
+	Item *key = new Item("key", "This is a key.", ItemType::KEY);
+	cout << key->GetItemType() << endl;
+	Item *rock = new Item("rock", "A simple rock.");
+	cout << rock->GetItemType() << endl;
 
 	// Create NPC
 	class NPC *npc = new class NPC("Pepito", "Buenos dias me llamo Pepito", room3);
@@ -46,8 +48,12 @@ World::World() {
 	entities.push_back(exitR2toR1);
 	entities.push_back(exitR1toR3);
 	entities.push_back(exitR3toR1);
+	entities.push_back(npc);
 	entities.push_back(key);
 	entities.push_back(rock);
+
+	// Show init room
+	this->player->DescribeCurrentRoom();
 
 }
 
@@ -64,8 +70,6 @@ void World::HandleInput(vector<string>& words) {
 			cerr << "ERROR: Type something!" << endl;
 			break;
 		case 1:
-			cout << "Invalid word" << endl;
-			break;
 		case 2:
 			HandleAction(words);
 			break;
@@ -77,10 +81,16 @@ void World::HandleInput(vector<string>& words) {
 
 void World::HandleAction(vector<string>& words) {
 
-	string actionName = words.at(0);
-	string actionParameter = words.at(1);
+	string actionName = ToLowercase(words.at(0));
+	string actionParameter = "";
+	if (words.size() > 1) {
+		actionParameter = ToLowercase(words.at(1));
+	}
 
-	if (ACTION_LOOK == actionName || ACTION_SEE == actionName) {
+	if (ACTION_INVENTORY == actionName) {
+		this->player->Inventory();
+	}
+	else if (ACTION_LOOK == actionName || ACTION_SEE == actionName) {
 		this->player->Look(actionParameter);
 	}
 	else if (ACTION_GO == actionName || ACTION_WALK == actionName) {

@@ -8,12 +8,14 @@ public:
 	Exit(string name, string description, Direction direction, Room* source, Room* destination) : Entity(EntityType::EXIT, name, description) {
 		this->direction = direction;
 		this->source = source;
-		this->destination;
+		this->destination = destination;
 		this->locked = false;
 	}
 
 	void Update(){}
 	Direction GetDirection();
+	Room* GetSource();
+	Room* GetDestination();
 	void SetLocked(bool locked);
 	bool IsLocked();
 

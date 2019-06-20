@@ -20,7 +20,7 @@ vector<string> Split(string str) {
 }
 
 string DirectionToString(Direction dir) {
-	string result;
+	string result = "";
 
 	switch (dir) {
 		case NORTH:
@@ -40,4 +40,9 @@ string DirectionToString(Direction dir) {
 	}
 
 	return result;
+}
+
+string ToLowercase(string str) {
+	std::transform(str.begin(), str.end(), str.begin(), tolower);
+	return str;
 }

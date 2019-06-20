@@ -8,6 +8,7 @@ public:
 		this->location = location;
 	}
 	virtual void Update() = 0;
+	Room* GetLocation();
 
 protected:
 	Room* location;

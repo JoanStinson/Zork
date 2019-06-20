@@ -3,7 +3,7 @@
 
 int main() {
 
-	cout << "Welcome to Zork" << endl;
+	cout << "Welcome to Zork!" << endl;
 
 	World world;
 	string input;
@@ -12,10 +12,11 @@ int main() {
 
 		getline(cin, input);
 
+		// Split string to words
 		vector<string> words = Split(input);
 
 		// Exit
-		if (words.size() > 0 && (words.at(0).compare(ACTION_EXIT) == 0 || words.at(0).compare(ACTION_QUIT) == 0)) 
+		if (words.size() > 0 && (ToLowercase(words.at(0)).compare(ACTION_EXIT) == 0 || ToLowercase(words.at(0)).compare(ACTION_QUIT) == 0)) 
 			break;
 
 		// Parse command
@@ -24,5 +25,6 @@ int main() {
 	}
 	cout << "Thanks for playing!" << endl;
 
+	system("pause");
 	return 0;
 }
