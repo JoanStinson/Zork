@@ -11,4 +11,6 @@ typedef enum Direction { NORTH, EAST, SOUTH, WEST };
 
 vector<string> Split(string str);
 string DirectionToString(Direction dir);
+Direction* StringToDirection(string str);
 string ToLowercase(string str);
+bool IsDirection(string str);

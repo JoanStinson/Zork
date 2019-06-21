@@ -121,6 +121,7 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="World.cpp" />

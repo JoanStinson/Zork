@@ -24,12 +24,20 @@ World::World() {
 	cout << rock->GetItemType() << endl;
 
 	// Create NPC
-	class NPC *npc = new class NPC("Pepito", "Buenos dias me llamo Pepito", room3);
+	class NPC *aldeano = new class NPC("Aldeano", "Buenos dias me llamo Aldeano", room1);
+	Item* watch = new Item("Watch", "This is a watch.");
+	Item* knife = new Item("Knife", "This is a knife");
+	Item* book = new Item("Book", "This is a book");
+	aldeano->Insert(watch);
+	aldeano->Insert(knife);
+	aldeano->Insert(book);
+	class NPC *pepito = new class NPC("Pepito", "Buenos dias me llamo Pepito", room3);
 
 	// Add entities to Room 1
 	room1->Insert(exitR1toR2);
 	room1->Insert(exitR1toR3);
 	room1->Insert(rock);
+	room1->Insert(aldeano);
 
 	// Add entities to Room 2
 	room2->Insert(exitR2toR1);
@@ -37,7 +45,7 @@ World::World() {
 
 	// Add entities to Room 3
 	room3->Insert(exitR3toR1);
-	room3->Insert(npc);
+	room3->Insert(pepito);
 
 	// Add all entities to world
 	entities.push_back(room1);
@@ -48,7 +56,8 @@ World::World() {
 	entities.push_back(exitR2toR1);
 	entities.push_back(exitR1toR3);
 	entities.push_back(exitR3toR1);
-	entities.push_back(npc);
+	entities.push_back(aldeano);
+	entities.push_back(pepito);
 	entities.push_back(key);
 	entities.push_back(rock);
 

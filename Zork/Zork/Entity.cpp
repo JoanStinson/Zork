@@ -32,17 +32,17 @@ void Entity::Remove(Entity *entity) {
 	contains.remove(entity);
 }
 
-const void Entity::Look() {
+void Entity::Look() {
 	cout << name << ": " << description << endl;
 }
 
-int Entity::ShowItems(list<Entity*> entities) {
+int Entity::Show(list<Entity*> entities, EntityType type) {
 	int count = 0;
 
 	// Search for items
 	for (Entity *e : entities) {
 
-		if (e->GetType() == EntityType::ITEM) {
+		if (type == e->GetType()) {
 			string itemName = ToLowercase(e->GetName());
 			cout << "- " << itemName << endl;
 			count++;

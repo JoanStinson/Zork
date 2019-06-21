@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Creature.h"
 #include "Exit.h"
+#include "NPC.h"
 
 class Player : public Creature {
 
@@ -11,7 +12,6 @@ public:
 	}
 
 	void DescribeCurrentRoom();
-	void Update(){}
 	void Inventory();
 	void Look(string str);
 	void Go(string str);
@@ -29,5 +29,9 @@ public:
 
 private:
 	Item* holdingItem;
+	Exit* GetExitFromDirection(Direction dir);
+	Exit* GetExitFromDirection(string str);
+	Item* GetItemFromName(string name);
+	Item* GetItemFromName(string name, list<Entity*> entities);
 
 };

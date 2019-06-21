@@ -12,7 +12,6 @@ public:
 		this->locked = false;
 	}
 
-	void Update(){}
 	Direction GetDirection();
 	Room* GetSource();
 	Room* GetDestination();

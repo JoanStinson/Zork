@@ -42,7 +42,26 @@ string DirectionToString(Direction dir) {
 	return result;
 }
 
+Direction* StringToDirection(string str) {
+	Direction *result = NULL;
+
+	if (str.compare("north") == 0)
+		result = new Direction(Direction::NORTH);
+	else if (str.compare("east") == 0)
+		result = new Direction(Direction::EAST);
+	else if (str.compare("south") == 0)
+		result = new Direction(Direction::SOUTH);
+	else if (str.compare("west") == 0)
+		result = new Direction(Direction::WEST);
+
+	return result;
+}
+
 string ToLowercase(string str) {
 	std::transform(str.begin(), str.end(), str.begin(), tolower);
 	return str;
+}
+
+bool IsDirection(string str) {
+	return StringToDirection(str) != NULL;
 }

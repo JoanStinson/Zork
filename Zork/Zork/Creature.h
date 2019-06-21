@@ -7,7 +7,6 @@ public:
 	Creature(EntityType type, string name, string description, Room* location) : Entity(type, name, description) {
 		this->location = location;
 	}
-	virtual void Update() = 0;
 	Room* GetLocation();
 
 protected:

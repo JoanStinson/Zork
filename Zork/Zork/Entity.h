@@ -17,10 +17,9 @@ public:
 	void Insert(Entity* entity);
 	void Remove(Entity* entity);
 
-	virtual void Update() = 0;
-	virtual const void Look();
+	virtual void Look();
 
-	int ShowItems(list<Entity*> entities);
+	int Show(list<Entity*> entities, EntityType type);
 
 	bool operator == (const Entity& e) const { return type == e.type && name == e.name; }
 	bool operator != (const Entity& e) const { return !operator==(e); }
