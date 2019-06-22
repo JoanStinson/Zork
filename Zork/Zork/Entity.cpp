@@ -12,15 +12,15 @@ Entity::~Entity() {
 	contains.clear();
 }
 
-string Entity::GetName() {
+string Entity::GetName() const {
 	return name;
 }
 
-string Entity::GetDescription() {
+string Entity::GetDescription() const {
 	return description;
 }
 
-EntityType Entity::GetType() {
+EntityType Entity::GetType() const {
 	return type;
 }
 
@@ -36,7 +36,7 @@ void Entity::Look() {
 	cout << name << ": " << description << endl;
 }
 
-int Entity::Show(list<Entity*> entities, EntityType type) {
+int Entity::Show(list<Entity*>& entities, EntityType type) {
 	int count = 0;
 
 	// Search for items

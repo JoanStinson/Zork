@@ -19,9 +19,7 @@ World::World() {
 
 	// Create items
 	Item *key = new Item("key", "This is a key.", ItemType::KEY);
-	cout << key->GetItemType() << endl;
 	Item *rock = new Item("rock", "A simple rock.");
-	cout << rock->GetItemType() << endl;
 
 	// Create NPC
 	class NPC *aldeano = new class NPC("Aldeano", "Buenos dias me llamo Aldeano", room1);
@@ -72,7 +70,7 @@ World::~World() {
 	entities.clear();
 }
 
-void World::HandleInput(vector<string>& words) {
+void World::HandleInput(const vector<string>& words) const {
 
 	switch (words.size()) {
 		case 0:
@@ -88,11 +86,11 @@ void World::HandleInput(vector<string>& words) {
 	}
 }
 
-void World::SetPlayer(Player * player) {
+void World::SetPlayer(Player* player) {
 	this->player = player;
 }
 
-void World::HandleAction(vector<string>& words) {
+void World::HandleAction(const vector<string>& words) const {
 
 	string actionName = Globals::ToLowercase(words.at(0));
 	string actionParameter = "";

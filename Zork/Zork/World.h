@@ -47,11 +47,11 @@ public:
 	World();
 	~World();
 
-	void HandleInput(vector<string> &words);
+	void HandleInput(const vector<string>& words) const;
 	void SetPlayer(Player* player);
 
 private:
-	void HandleAction(vector<string> &words);
+	void HandleAction(const vector<string>& words) const;
 
 	Player *player;
 	vector<Entity*> entities;

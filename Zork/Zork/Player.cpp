@@ -15,12 +15,12 @@ void Player::Inventory() {
 	cout << "You have " << Show(this->contains, EntityType::ITEM) << " items" << endl;
 }
 
-void Player::Look(string parameter) {
+void Player::Look(const string& str) {
 
 	bool looked = false;
 
 	// Look at me
-	if (parameter.compare("me") == 0) {
+	if (str.compare("me") == 0) {
 		this->Entity::Look();
 		looked = true;
 	}
@@ -28,7 +28,7 @@ void Player::Look(string parameter) {
 	// Look at room
 	if (!looked) {
 		string currentRoomName = Globals::ToLowercase(location->GetName());
-		if (currentRoomName.compare(parameter) == 0) {
+		if (currentRoomName.compare(str) == 0) {
 			location->Look();
 			looked = true;
 		}
@@ -46,7 +46,7 @@ void Player::Look(string parameter) {
 				case EntityType::EXIT:
 				case EntityType::ITEM:
 					entityName = Globals::ToLowercase(e->GetName());
-					if (entityName.compare(parameter) == 0) {
+					if (entityName.compare(str) == 0) {
 						e->Look();
 						looked = true;
 					}
@@ -60,7 +60,7 @@ void Player::Look(string parameter) {
 
 	// Look at direction
 	if (!looked) {
-		Exit* exit = GetExitFromDirection(parameter);
+		Exit* exit = GetExitFromDirection(str);
 
 		if (exit != NULL) {
 			exit->Look();
@@ -69,12 +69,12 @@ void Player::Look(string parameter) {
 	}
 
 	if (!looked) {
-		cerr << "Nothing relevant to look at " << parameter << endl;
+		cerr << "Nothing relevant to look at " << str << endl;
 	}
 
 }
 
-void Player::Go(string str) {
+void Player::Go(const string& str) {
 
 	bool moved = false;
 
@@ -96,7 +96,7 @@ void Player::Go(string str) {
 
 }
 
-void Player::Take(string str) {
+void Player::Take(const string& str) {
 
 	// Search for items
 	Item* item = GetItemFromName(str, location->contains);
@@ -112,7 +112,7 @@ void Player::Take(string str) {
 	
 }
 
-void Player::Drop(string str) {
+void Player::Drop(const string& str) {
 
 	// Search for items
 	Item* item = GetItemFromName(str);
@@ -131,7 +131,7 @@ void Player::Drop(string str) {
 
 }
 
-void Player::Equip(string str) {
+void Player::Equip(const string& str) {
 
 	// Search for items
 	Item* item = GetItemFromName(str);
@@ -148,7 +148,7 @@ void Player::Equip(string str) {
 
 }
 
-void Player::Unequip(string str) {
+void Player::Unequip(const string& str) {
 
 	// Search for items
 	Item* item = GetItemFromName(str);
@@ -168,11 +168,11 @@ void Player::Unequip(string str) {
 
 }
 
-void Player::Attack(string str) {
+void Player::Attack(const string& str) {
 
 }
 
-void Player::Lock(string str) {
+void Player::Lock(const string& str) {
 	// Check if it's direction
 	if (Globals::IsDirection(str)) {
 
@@ -219,7 +219,7 @@ void Player::Lock(string str) {
 	}
 }
 
-void Player::Unlock(string str) {
+void Player::Unlock(const string& str) {
 	// Check if it's direction
 	if (Globals::IsDirection(str)) {
 
@@ -266,7 +266,7 @@ void Player::Unlock(string str) {
 	}
 }
 
-void Player::Loot(string str) {
+void Player::Loot(const string& str) {
 	// Mirar que sea un parametro valido y coincida con el nombre del npc
 	// Si no tiene items, "nothing to loot" y sino, nos copiamos todo de su lista a nuestra y le borramos la suya
 	bool foundNpc = false;
@@ -298,7 +298,7 @@ void Player::Loot(string str) {
 		cout << "No NPCs found in this room" << endl;
 }
 
-Item * Player::GetHoldingItem() {
+Item * Player::GetHoldingItem() const {
 	return holdingItem;
 }
 
@@ -306,7 +306,7 @@ void Player::SetHoldingItem(Item * item) {
 	holdingItem = item;
 }
 
-Exit * Player::GetExitFromDirection(Direction dir) {
+Exit * Player::GetExitFromDirection(const Direction& dir) const {
 	Exit* exit = NULL;
 
 	// Search for exits
@@ -325,15 +325,15 @@ Exit * Player::GetExitFromDirection(Direction dir) {
 	return exit;
 
 }
-Exit * Player::GetExitFromDirection(string str) {
+Exit * Player::GetExitFromDirection(const string& str) const {
 	return Globals::IsDirection(str) ? GetExitFromDirection(*Globals::StringToDirection(str)) : NULL;
 }
 
-Item * Player::GetItemFromName(string name) {
+Item * Player::GetItemFromName(const string& name) const {
 	return GetItemFromName(name, this->contains);
 }
 
-Item * Player::GetItemFromName(string name, list<Entity*> entities) {
+Item * Player::GetItemFromName(const string& name, const list<Entity*>& entities) const {
 	Item *item = NULL;
 
 	// Search for items

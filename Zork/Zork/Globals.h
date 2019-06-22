@@ -12,9 +12,9 @@ typedef enum Direction { NORTH, EAST, SOUTH, WEST };
 class Globals {
 
 public:
-	static vector<string> Split(string str);
-	static string DirectionToString(Direction dir);
-	static Direction* StringToDirection(string str);
+	static vector<string> Split(string& str);
+	static string DirectionToString(const Direction& dir);
+	static Direction* StringToDirection(const string& str);
 	static string ToLowercase(string str);
-	static bool IsDirection(string str);
+	static bool IsDirection(const string& str);
 };

@@ -12,11 +12,11 @@ public:
 		this->locked = false;
 	}
 
-	Direction GetDirection();
-	Room* GetSource();
-	Room* GetDestination();
+	Direction GetDirection() const;
+	Room* GetSource() const;
+	Room* GetDestination() const;
+	bool IsLocked() const;
 	void SetLocked(bool locked);
-	bool IsLocked();
 
 private:
 	Direction direction;

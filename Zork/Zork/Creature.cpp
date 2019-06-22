@@ -1,5 +1,5 @@
 #include "Creature.h"
 
-Room * Creature::GetLocation() {
+Room * Creature::GetLocation() const {
 	return location;
 }

@@ -13,25 +13,27 @@ public:
 
 	void DescribeCurrentRoom();
 	void Inventory();
-	void Look(string str);
-	void Go(string str);
-	void Take(string str);
-	void Drop(string str);
-	void Equip(string str);
-	void Unequip(string str);
-	void Attack(string str);
-	void Lock(string str);
-	void Unlock(string str);
-	void Loot(string str);
 
-	Item* GetHoldingItem();
+	// Actions
+	void Look(const string& str);
+	void Go(const string& str);
+	void Take(const string& str);
+	void Drop(const string& str);
+	void Equip(const string& str);
+	void Unequip(const string& str);
+	void Attack(const string& str);
+	void Lock(const string& str);
+	void Unlock(const string& str);
+	void Loot(const string& str);
+
+	Item* GetHoldingItem() const;
 	void SetHoldingItem(Item* item);
 
 private:
 	Item* holdingItem;
-	Exit* GetExitFromDirection(Direction dir);
-	Exit* GetExitFromDirection(string str);
-	Item* GetItemFromName(string name);
-	Item* GetItemFromName(string name, list<Entity*> entities);
+	Exit* GetExitFromDirection(const Direction& dir) const;
+	Exit* GetExitFromDirection(const string& str) const;
+	Item* GetItemFromName(const string& name) const;
+	Item* GetItemFromName(const string& name, const list<Entity*>& entities) const;
 
 };

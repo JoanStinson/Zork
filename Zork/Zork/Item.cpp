@@ -1,5 +1,5 @@
 #include "Item.h"
 
-ItemType Item::GetItemType() {
+ItemType Item::GetItemType() const {
 	return itemType;
 }

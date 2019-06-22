@@ -14,7 +14,7 @@ public:
 		this->itemType = itemType;
 	}
 
-	ItemType GetItemType();
+	ItemType GetItemType() const;
 
 private:
 	ItemType itemType;
