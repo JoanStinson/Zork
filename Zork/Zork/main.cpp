@@ -13,10 +13,10 @@ int main() {
 		getline(cin, input);
 
 		// Split string to words
-		vector<string> words = Split(input);
+		vector<string> words = Globals::Split(input);
 
 		// Exit
-		if (words.size() > 0 && (ToLowercase(words.at(0)).compare(ACTION_EXIT) == 0 || ToLowercase(words.at(0)).compare(ACTION_QUIT) == 0)) 
+		if (words.size() > 0 && (Globals::ToLowercase(words.at(0)).compare(ACTION_EXIT) == 0 || Globals::ToLowercase(words.at(0)).compare(ACTION_QUIT) == 0)) 
 			break;
 
 		// Parse command

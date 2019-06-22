@@ -43,7 +43,7 @@ int Entity::Show(list<Entity*> entities, EntityType type) {
 	for (Entity *e : entities) {
 
 		if (type == e->GetType()) {
-			string itemName = ToLowercase(e->GetName());
+			string itemName = Globals::ToLowercase(e->GetName());
 			cout << "- " << itemName << endl;
 			count++;
 		}

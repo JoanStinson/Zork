@@ -88,12 +88,16 @@ void World::HandleInput(vector<string>& words) {
 	}
 }
 
+void World::SetPlayer(Player * player) {
+	this->player = player;
+}
+
 void World::HandleAction(vector<string>& words) {
 
-	string actionName = ToLowercase(words.at(0));
+	string actionName = Globals::ToLowercase(words.at(0));
 	string actionParameter = "";
 	if (words.size() > 1) {
-		actionParameter = ToLowercase(words.at(1));
+		actionParameter = Globals::ToLowercase(words.at(1));
 	}
 
 	if (ACTION_INVENTORY == actionName) {
@@ -130,5 +134,5 @@ void World::HandleAction(vector<string>& words) {
 		this->player->Loot(actionParameter);
 	}
 	else
-		cout << "Invalid action, try again" << endl;
+		cerr << "Invalid action, try again" << endl;
 }

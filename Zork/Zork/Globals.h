@@ -9,8 +9,12 @@ using namespace std;
 
 typedef enum Direction { NORTH, EAST, SOUTH, WEST };
 
-vector<string> Split(string str);
-string DirectionToString(Direction dir);
-Direction* StringToDirection(string str);
-string ToLowercase(string str);
-bool IsDirection(string str);
+class Globals {
+
+public:
+	static vector<string> Split(string str);
+	static string DirectionToString(Direction dir);
+	static Direction* StringToDirection(string str);
+	static string ToLowercase(string str);
+	static bool IsDirection(string str);
+};

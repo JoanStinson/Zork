@@ -48,6 +48,7 @@ public:
 	~World();
 
 	void HandleInput(vector<string> &words);
+	void SetPlayer(Player* player);
 
 private:
 	void HandleAction(vector<string> &words);

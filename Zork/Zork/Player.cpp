@@ -27,7 +27,7 @@ void Player::Look(string parameter) {
 
 	// Look at room
 	if (!looked) {
-		string currentRoomName = ToLowercase(location->GetName());
+		string currentRoomName = Globals::ToLowercase(location->GetName());
 		if (currentRoomName.compare(parameter) == 0) {
 			location->Look();
 			looked = true;
@@ -45,7 +45,7 @@ void Player::Look(string parameter) {
 				case EntityType::NPC:
 				case EntityType::EXIT:
 				case EntityType::ITEM:
-					entityName = ToLowercase(e->GetName());
+					entityName = Globals::ToLowercase(e->GetName());
 					if (entityName.compare(parameter) == 0) {
 						e->Look();
 						looked = true;
@@ -174,9 +174,9 @@ void Player::Attack(string str) {
 
 void Player::Lock(string str) {
 	// Check if it's direction
-	if (IsDirection(str)) {
+	if (Globals::IsDirection(str)) {
 
-		Direction* direction = StringToDirection(str);
+		Direction* direction = Globals::StringToDirection(str);
 		Exit* exit = GetExitFromDirection(str);
 
 		if (exit == NULL) {
@@ -221,9 +221,9 @@ void Player::Lock(string str) {
 
 void Player::Unlock(string str) {
 	// Check if it's direction
-	if (IsDirection(str)) {
+	if (Globals::IsDirection(str)) {
 
-		Direction* direction = StringToDirection(str);
+		Direction* direction = Globals::StringToDirection(str);
 		Exit* exit = GetExitFromDirection(str);
 
 		if (exit == NULL) {
@@ -278,7 +278,7 @@ void Player::Loot(string str) {
 
 			class NPC* npc = (class NPC*)e;
 
-			string npcName = ToLowercase(npc->GetName());
+			string npcName = Globals::ToLowercase(npc->GetName());
 			if (npcName.compare(str) == 0) {
 				foundNpc = true;
 
@@ -326,7 +326,7 @@ Exit * Player::GetExitFromDirection(Direction dir) {
 
 }
 Exit * Player::GetExitFromDirection(string str) {
-	return IsDirection(str) ? GetExitFromDirection(*StringToDirection(str)) : NULL;
+	return Globals::IsDirection(str) ? GetExitFromDirection(*Globals::StringToDirection(str)) : NULL;
 }
 
 Item * Player::GetItemFromName(string name) {
@@ -341,7 +341,7 @@ Item * Player::GetItemFromName(string name, list<Entity*> entities) {
 
 		if (e->GetType() == EntityType::ITEM) {
 
-			string itemName = ToLowercase(e->GetName());
+			string itemName = Globals::ToLowercase(e->GetName());
 
 			if (itemName.compare(name) == 0) {
 				item = (Item*)e;
