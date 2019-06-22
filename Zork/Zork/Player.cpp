@@ -25,9 +25,15 @@ void Player::Look(const string& str) {
 		looked = true;
 	}
 
+	// Look at me
+	if (str.compare("room") == 0) {
+		DescribeCurrentRoom();
+		looked = true;
+	}
+
 	// Look at room
 	if (!looked) {
-		string currentRoomName = Globals::ToLowercase(location->GetName());
+		string currentRoomName = Globals::toLowercase(location->GetName());
 		if (currentRoomName.compare(str) == 0) {
 			location->Look();
 			looked = true;
@@ -45,7 +51,7 @@ void Player::Look(const string& str) {
 				case EntityType::NPC:
 				case EntityType::EXIT:
 				case EntityType::ITEM:
-					entityName = Globals::ToLowercase(e->GetName());
+					entityName = Globals::toLowercase(e->GetName());
 					if (entityName.compare(str) == 0) {
 						e->Look();
 						looked = true;
@@ -105,6 +111,21 @@ void Player::Take(const string& str) {
 		cout << "You can't take " << str << endl;
 	}
 	else {
+		if (item->GetItemType() == ItemType::WEAPON) {
+
+			Item* holder = GetItemFromType(ItemType::HOLDER);
+
+			// Si no tenemos un holder, necesitamos un scabbard
+			if (holder == NULL) {
+				cout << "You need to have a holder to take this " << str << endl;
+				return;
+			}
+			else {
+				holder->Insert(item);
+				item->SetParent(holder);
+			}
+		}
+
 		this->contains.push_back(item);
 		this->location->contains.remove(item);
 		cout << "You now have a " << str << endl;
@@ -121,9 +142,26 @@ void Player::Drop(const string& str) {
 		cout << "You can't drop a " << str << endl;
 	}
 	else {
+		// Check if equipped
 		if (GetHoldingItem() == item) {
 			Unequip(str);
 		}
+
+		// Check for parent
+		Entity* parent = item->GetParent();
+		if (parent != NULL) {
+			parent->Remove(item);
+			item->SetParent(NULL);
+		}
+
+		// Check if childs
+		for (Entity* child : item->contains) {
+			this->contains.remove(child);
+			this->location->contains.push_back(child);
+			cout << "You dropped a " << child->GetName() << endl;
+		}
+
+		item->contains.clear();
 		this->contains.remove(item);
 		this->location->contains.push_back(item);
 		cout << "You dropped a " << str << endl;
@@ -174,9 +212,9 @@ void Player::Attack(const string& str) {
 
 void Player::Lock(const string& str) {
 	// Check if it's direction
-	if (Globals::IsDirection(str)) {
+	if (Globals::isDir(str)) {
 
-		Direction* direction = Globals::StringToDirection(str);
+		Direction* direction = Globals::strToDir(str);
 		Exit* exit = GetExitFromDirection(str);
 
 		if (exit == NULL) {
@@ -187,28 +225,19 @@ void Player::Lock(const string& str) {
 			if (!exit->IsLocked()) {
 
 				// Search for items
-				bool keyFound = false;
-				for (Entity *e : this->contains) {
-					if (e->GetType() == EntityType::ITEM) {
-						Item* item = (Item*)e;
+				Item* key = GetItemFromType(ItemType::KEY);
 
-						// Check if we have a key (ONLY 1 KEY IN THE GAME)
-						if (item->GetItemType() == ItemType::KEY) {
-							keyFound = true;
-
-							// Check if key is equipped
-							if (GetHoldingItem() == item) {
-								cout << str << " locked" << endl;
-								exit->SetLocked(true);
-							}
-							else cout << "You are not holding a key" << endl;
-							break;
-						}
-					}
-				}
-
-				if (!keyFound)
+				if (key == NULL) {
 					cout << "You don't have a key to lock the exit" << endl;
+				}
+				else {
+					// Check if key is equipped
+					if (key == GetHoldingItem()) {
+						cout << str << " locked" << endl;
+						exit->SetLocked(true);
+					}
+					else cout << "You are not holding a key" << endl;
+				}					
 			}
 			else cout << str << " is already locked" << endl;
 		}
@@ -221,9 +250,9 @@ void Player::Lock(const string& str) {
 
 void Player::Unlock(const string& str) {
 	// Check if it's direction
-	if (Globals::IsDirection(str)) {
+	if (Globals::isDir(str)) {
 
-		Direction* direction = Globals::StringToDirection(str);
+		Direction* direction = Globals::strToDir(str);
 		Exit* exit = GetExitFromDirection(str);
 
 		if (exit == NULL) {
@@ -234,28 +263,19 @@ void Player::Unlock(const string& str) {
 			if (exit->IsLocked()) {
 
 				// Search for items
-				bool keyFound = false;
-				for (Entity *e : this->contains) {
-					if (e->GetType() == EntityType::ITEM) {
-						Item* item = (Item*)e;
+				Item* key = GetItemFromType(ItemType::KEY);
 
-						// Check if we have a key (ONLY 1 KEY IN THE GAME)
-						if (item->GetItemType() == ItemType::KEY) {
-							keyFound = true;
-
-							// Check if key is equipped
-							if (GetHoldingItem() == item) {
-								cout << str << " unlocked" << endl;
-								exit->SetLocked(false);
-							}
-							else cout << "You are not holding a key" << endl;
-							break;
-						}
-					}
-				}
-
-				if (!keyFound)
+				if (key == NULL) {
 					cout << "You don't have a key to unlock the exit" << endl;
+				}
+				else {
+					// Check if key is equipped
+					if (key == GetHoldingItem()) {
+						cout << str << " unlocked" << endl;
+						exit->SetLocked(false);
+					}
+					else cout << "You are not holding a key" << endl;
+				}
 			}
 			else cout << str << " is already unlocked" << endl;
 		}
@@ -278,7 +298,7 @@ void Player::Loot(const string& str) {
 
 			class NPC* npc = (class NPC*)e;
 
-			string npcName = Globals::ToLowercase(npc->GetName());
+			string npcName = Globals::toLowercase(npc->GetName());
 			if (npcName.compare(str) == 0) {
 				foundNpc = true;
 
@@ -326,7 +346,7 @@ Exit * Player::GetExitFromDirection(const Direction& dir) const {
 
 }
 Exit * Player::GetExitFromDirection(const string& str) const {
-	return Globals::IsDirection(str) ? GetExitFromDirection(*Globals::StringToDirection(str)) : NULL;
+	return Globals::isDir(str) ? GetExitFromDirection(*Globals::strToDir(str)) : NULL;
 }
 
 Item * Player::GetItemFromName(const string& name) const {
@@ -341,11 +361,30 @@ Item * Player::GetItemFromName(const string& name, const list<Entity*>& entities
 
 		if (e->GetType() == EntityType::ITEM) {
 
-			string itemName = Globals::ToLowercase(e->GetName());
+			string itemName = Globals::toLowercase(e->GetName());
 
 			if (itemName.compare(name) == 0) {
 				item = (Item*)e;
 			}
+		}
+	}
+	return item;
+}
+
+Item * Player::GetItemFromType(ItemType type) {
+	Item *item = NULL;
+
+	// Search for items
+	for (Entity *e : this->contains) {
+
+		if (e->GetType() == EntityType::ITEM && ((Item*)e)->GetItemType() == type) {
+
+			//string itemName = Globals::toLowercase(e->GetName());
+
+			//if (itemName.compare(name) == 0) {
+			item = (Item*)e;
+			break;
+			//}
 		}
 	}
 	return item;

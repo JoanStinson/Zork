@@ -1,7 +1,7 @@
 #pragma once
 #include "Globals.h"
 
-typedef enum EntityType { NPC, PLAYER, EXIT, ROOM, ITEM };
+typedef enum EntityType { NPC, PLAYER, EXIT, ROOM, ITEM, MONSTER };
 
 class Entity {
 
@@ -19,6 +19,10 @@ public:
 	int Show(list<Entity*>& entities, EntityType type);
 
 	list<Entity*> contains;
+	Entity* parent;
+
+	Entity* GetParent();
+	void SetParent(Entity* parent);
 
 	bool operator == (const Entity& e) const { return type == e.type && name == e.name; }
 	bool operator != (const Entity& e) const { return !operator==(e); }

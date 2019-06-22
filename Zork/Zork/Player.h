@@ -35,5 +35,5 @@ private:
 	Exit* GetExitFromDirection(const string& str) const;
 	Item* GetItemFromName(const string& name) const;
 	Item* GetItemFromName(const string& name, const list<Entity*>& entities) const;
-
+	Item * GetItemFromType(ItemType type);
 };

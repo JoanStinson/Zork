@@ -8,23 +8,21 @@ int main() {
 	World world;
 	string input;
 
-	while (true) {
-
-		getline(cin, input);
+	while (getline(cin, input)) {
 
 		// Split string to words
-		vector<string> words = Globals::Split(input);
+		vector<string> words = Globals::split(input);
 
 		// Exit
-		if (words.size() > 0 && (Globals::ToLowercase(words.at(0)).compare(ACTION_EXIT) == 0 || Globals::ToLowercase(words.at(0)).compare(ACTION_QUIT) == 0)) 
+		if (words.size() > 0 && (Globals::toLowercase(words.at(0)).compare(ACTION_EXIT) == 0 || Globals::toLowercase(words.at(0)).compare(ACTION_QUIT) == 0)) 
 			break;
 
 		// Parse command
 		world.HandleInput(words);
 
 	}
-	cout << "Thanks for playing!" << endl;
 
+	cout << "Thanks for playing!" << endl;
 	system("pause");
 	return 0;
 }

@@ -4,7 +4,8 @@
 typedef enum ItemType {
 	COMMON,
 	KEY,
-	WEAPON
+	WEAPON, 
+	HOLDER
 };
 
 class Item : public Entity {

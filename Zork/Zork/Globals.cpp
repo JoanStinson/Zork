@@ -1,6 +1,6 @@
 #include "Globals.h"
 
-vector<string> Globals::Split(string& str) {
+vector<string> Globals::split(string& str) {
 	vector<string> words;
 	size_t pos = 0;
 	string word;
@@ -19,7 +19,7 @@ vector<string> Globals::Split(string& str) {
 	return words;
 }
 
-string Globals::DirectionToString(const Direction& dir) {
+string Globals::dirToStr(const Direction& dir) {
 	string result = "";
 
 	switch (dir) {
@@ -42,7 +42,7 @@ string Globals::DirectionToString(const Direction& dir) {
 	return result;
 }
 
-Direction* Globals::StringToDirection(const string& str) {
+Direction* Globals::strToDir(const string& str) {
 	Direction *result = NULL;
 
 	if (str.compare("north") == 0)
@@ -57,11 +57,11 @@ Direction* Globals::StringToDirection(const string& str) {
 	return result;
 }
 
-string Globals::ToLowercase(string str) {
+string Globals::toLowercase(string str) {
 	std::transform(str.begin(), str.end(), str.begin(), tolower);
 	return str;
 }
 
-bool Globals::IsDirection(const string& str) {
-	return StringToDirection(str) != NULL;
+bool Globals::isDir(const string& str) {
+	return strToDir(str) != NULL;
 }

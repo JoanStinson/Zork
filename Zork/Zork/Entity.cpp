@@ -4,9 +4,12 @@ Entity::Entity(EntityType type, string name, string description) {
 	this->type = type;
 	this->name = name;
 	this->description = description;
+	this->parent = NULL;
 }
 
 Entity::~Entity() {
+	if (parent != NULL)
+		delete parent;
 	for (Entity *e : contains)
 		delete e;
 	contains.clear();
@@ -43,11 +46,19 @@ int Entity::Show(list<Entity*>& entities, EntityType type) {
 	for (Entity *e : entities) {
 
 		if (type == e->GetType()) {
-			string itemName = Globals::ToLowercase(e->GetName());
+			string itemName = Globals::toLowercase(e->GetName());
 			cout << "- " << itemName << endl;
 			count++;
 		}
 	}
 
 	return count;
+}
+
+Entity * Entity::GetParent() {
+	return parent;
+}
+
+void Entity::SetParent(Entity * parent) {
+	this->parent = parent;
 }
