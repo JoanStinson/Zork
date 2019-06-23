@@ -4,8 +4,19 @@
 class Monster : public Creature {
 
 public:
-	Monster(string name, string description, Room* location) : Creature(EntityType::MONSTER, name, description, location) {}
+	Monster(string name, string description, Room* location) : Creature(EntityType::MONSTER, name, description, location) {
+		UpdateMonsterPosition();
+		this->life = 3;
+	}
 
-	//void Look();
+	Direction GetDirection() const;
+	void Attack(Direction* dir);
+	bool IsDead() const;
+
+private:
+	void UpdateMonsterPosition();
+
+	Direction position;
+	int life;
 };
 

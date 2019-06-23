@@ -4,13 +4,13 @@ Entity::Entity(EntityType type, string name, string description) {
 	this->type = type;
 	this->name = name;
 	this->description = description;
-	this->parent = NULL;
+	this->parent = nullptr;
 }
 
 Entity::~Entity() {
-	if (parent != NULL)
+	if (parent != nullptr)
 		delete parent;
-	for (Entity *e : contains)
+	for (Entity* e : contains)
 		delete e;
 	contains.clear();
 }
@@ -27,23 +27,31 @@ EntityType Entity::GetType() const {
 	return type;
 }
 
-void Entity::Insert(Entity *entity) {
-	contains.push_back(entity);
+Entity* Entity::GetParent() const {
+	return parent;
 }
 
-void Entity::Remove(Entity *entity) {
-	contains.remove(entity);
+void Entity::SetParent(Entity* parent) {
+	this->parent = parent;
 }
 
 void Entity::Look() {
-	cout << name << ": " << description << endl;
+	cout << description << endl;
+}
+
+void Entity::Insert(Entity* entity) {
+	contains.push_back(entity);
+}
+
+void Entity::Remove(Entity* entity) {
+	contains.remove(entity);
 }
 
 int Entity::Show(list<Entity*>& entities, EntityType type) {
 	int count = 0;
 
 	// Search for items
-	for (Entity *e : entities) {
+	for (Entity* e : entities) {
 
 		if (type == e->GetType()) {
 			string itemName = Globals::toLowercase(e->GetName());
@@ -53,12 +61,4 @@ int Entity::Show(list<Entity*>& entities, EntityType type) {
 	}
 
 	return count;
-}
-
-Entity * Entity::GetParent() {
-	return parent;
-}
-
-void Entity::SetParent(Entity * parent) {
-	this->parent = parent;
 }

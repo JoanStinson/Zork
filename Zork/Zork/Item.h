@@ -1,12 +1,7 @@
 #pragma once
 #include "Entity.h"
 
-typedef enum ItemType {
-	COMMON,
-	KEY,
-	WEAPON, 
-	HOLDER
-};
+enum ItemType { COMMON, KEY, WEAPON, HOLDER };
 
 class Item : public Entity {
 
@@ -19,5 +14,4 @@ public:
 
 private:
 	ItemType itemType;
-
 };

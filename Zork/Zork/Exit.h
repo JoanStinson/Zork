@@ -23,5 +23,4 @@ private:
 	Room* source;
 	Room* destination;
 	bool locked;
-
 };

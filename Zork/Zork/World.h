@@ -5,6 +5,7 @@
 #include "Room.h"
 #include "Exit.h"
 #include "NPC.h"
+#include "Monster.h"
 
 #define ACTION_INVENTORY "inventory"
 
@@ -38,8 +39,13 @@
 #define ACTION_LOOT "loot"
 #define ACTION_STEAL "steal"
 
+#define ACTION_TALK "talk" 
+#define ACTION_SPEAK "speak" 
+
 #define ACTION_EXIT "exit"
 #define ACTION_QUIT "quit"
+
+#define ACTION_HELP "help"
 
 class World {
 	
@@ -47,12 +53,17 @@ public:
 	World();
 	~World();
 
-	void HandleInput(const vector<string>& words) const;
+	void HandleInput(const vector<string>& words);
 	void SetPlayer(Player* player);
+	bool IsGameOver() const;
 
 private:
-	void HandleAction(const vector<string>& words) const;
+	void HandleAction(const vector<string>& words);
+	string ShowCommand(string str, string str2) const;
+	void ShowHelp() const;
+	string ExitDescription(Room* room) const;
 
-	Player *player;
+	Player* player;
 	vector<Entity*> entities;
+	bool gameOver;
 };

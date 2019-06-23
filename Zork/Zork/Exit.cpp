@@ -4,11 +4,11 @@ Direction Exit::GetDirection() const {
 	return direction;
 }
 
-Room * Exit::GetSource() const {
+Room* Exit::GetSource() const {
 	return source;
 }
 
-Room * Exit::GetDestination() const {
+Room* Exit::GetDestination() const {
 	return destination;
 }
 

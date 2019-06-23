@@ -3,16 +3,19 @@
 #include "Creature.h"
 #include "Exit.h"
 #include "NPC.h"
+#include "Monster.h"
 
 class Player : public Creature {
 
 public:
 	Player(string name, string description, Room* location) : Creature(EntityType::PLAYER, name, description, location) { 
-		this->holdingItem = NULL;
+		this->holdingItem = nullptr;
 	}
 
 	void DescribeCurrentRoom();
 	void Inventory();
+	Item* GetHoldingItem() const;
+	void SetHoldingItem(Item* item);
 
 	// Actions
 	void Look(const string& str);
@@ -21,19 +24,19 @@ public:
 	void Drop(const string& str);
 	void Equip(const string& str);
 	void Unequip(const string& str);
-	void Attack(const string& str);
+	bool Attack(const string& str);
 	void Lock(const string& str);
 	void Unlock(const string& str);
 	void Loot(const string& str);
-
-	Item* GetHoldingItem() const;
-	void SetHoldingItem(Item* item);
+	void Talk(const string& str);
 
 private:
-	Item* holdingItem;
 	Exit* GetExitFromDirection(const Direction& dir) const;
 	Exit* GetExitFromDirection(const string& str) const;
-	Item* GetItemFromName(const string& name) const;
-	Item* GetItemFromName(const string& name, const list<Entity*>& entities) const;
-	Item * GetItemFromType(ItemType type);
+	template <class T>
+	T* GetEntityFromName(const string& name, const list<Entity*>& entities, const EntityType type) const;
+	Item* GetItemFromType(ItemType type) const;
+	Monster* GetMonsterFromCurrentRoom() const;
+
+	Item* holdingItem;
 };

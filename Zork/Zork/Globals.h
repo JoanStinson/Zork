@@ -5,16 +5,18 @@
 #include <list>
 #include <map>
 #include <algorithm>
+#include <ctime>
+#include <cstdlib>
 using namespace std;
 
-typedef enum Direction { NORTH, EAST, SOUTH, WEST };
+enum Direction { NORTH, EAST, SOUTH, WEST };
 
-class Globals {
-
-public:
-	static vector<string> split(string& str);
-	static string dirToStr(const Direction& dir);
-	static Direction* strToDir(const string& str);
-	static string toLowercase(string str);
-	static bool isDir(const string& str);
+namespace Globals {
+	 vector<string> split(string& str);
+	 string dirToStr(const Direction& dir);
+	 Direction* strToDir(const string& str);
+	 string toLowercase(string str);
+	 string toUppercase(string str);
+	 bool isDir(const string& str);
+	 string getCurrentTime();
 };

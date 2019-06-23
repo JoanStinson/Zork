@@ -1,18 +1,26 @@
 #include "Player.h"
 
 void Player::DescribeCurrentRoom() {
-	cout << "You are now in " << this->location->GetName() << endl;
+	cout << "You are now in the " << location->GetName() << "." << endl;
 	GetLocation()->Look();
 	cout << "In this room you will find: " << endl;
-	if (Show(GetLocation()->contains, EntityType::ITEM) == 0) {
-		cout << "no items" << endl;
-	}
+	if (Show(GetLocation()->contains, EntityType::ITEM) == 0)
+		cout << "No items." << endl;
 	Show(GetLocation()->contains, EntityType::NPC);
+	Show(GetLocation()->contains, EntityType::MONSTER);
 }
 
 void Player::Inventory() {
-	cout << "PLAYER INVENTORY: " << endl;
-	cout << "You have " << Show(this->contains, EntityType::ITEM) << " items" << endl;
+	cout << "Inventory: " << endl;
+	cout << "You have " << Show(contains, EntityType::ITEM) << " items." << endl;
+}
+
+Item* Player::GetHoldingItem() const {
+	return holdingItem;
+}
+
+void Player::SetHoldingItem(Item* item) {
+	holdingItem = item;
 }
 
 void Player::Look(const string& str) {
@@ -20,21 +28,21 @@ void Player::Look(const string& str) {
 	bool looked = false;
 
 	// Look at me
-	if (str.compare("me") == 0) {
-		this->Entity::Look();
-		looked = true;
-	}
-
-	// Look at me
-	if (str.compare("room") == 0) {
-		DescribeCurrentRoom();
+	if ("me" == str) {
+		Entity::Look();
 		looked = true;
 	}
 
 	// Look at room
+	if ("room" == str) {
+		DescribeCurrentRoom();
+		looked = true;
+	}
+
+	// Look at room using its name
 	if (!looked) {
 		string currentRoomName = Globals::toLowercase(location->GetName());
-		if (currentRoomName.compare(str) == 0) {
+		if (currentRoomName == str) {
 			location->Look();
 			looked = true;
 		}
@@ -46,21 +54,31 @@ void Player::Look(const string& str) {
 
 		for (Entity *e : location->contains) {
 
-			// Si esta en la room y coincide nombre hacer look
+			// If it's in the room and has the same name
 			switch (e->GetType()) {
-				case EntityType::NPC:
-				case EntityType::EXIT:
-				case EntityType::ITEM:
-					entityName = Globals::toLowercase(e->GetName());
-					if (entityName.compare(str) == 0) {
-						e->Look();
-						looked = true;
-					}
+			case EntityType::NPC:
+			case EntityType::EXIT:
+			case EntityType::ITEM:
+				entityName = Globals::toLowercase(e->GetName());
+				if (entityName == str) {
+					e->Look();
+					looked = true;
+				}
 				break;
-				default:
-					break;
+			default:
+				break;
 			}
 
+		}
+	}
+
+	// Look at entities in your inventory
+	if (!looked) {
+		Item* item = GetEntityFromName<Item>(str, contains, EntityType::ITEM);
+
+		if (item != nullptr) {
+			item->Look();
+			looked = true;
 		}
 	}
 
@@ -68,14 +86,14 @@ void Player::Look(const string& str) {
 	if (!looked) {
 		Exit* exit = GetExitFromDirection(str);
 
-		if (exit != NULL) {
+		if (exit != nullptr) {
 			exit->Look();
 			looked = true;
 		}
 	}
 
 	if (!looked) {
-		cerr << "Nothing relevant to look at " << str << endl;
+		cerr << "Nothing relevant to look at " << str << "." << endl;
 	}
 
 }
@@ -84,40 +102,40 @@ void Player::Go(const string& str) {
 
 	bool moved = false;
 
-	Exit *exit = GetExitFromDirection(str);
-	if (exit != NULL) {
+	Exit* exit = GetExitFromDirection(str);
+	if (exit != nullptr) {
 		if (exit->IsLocked()) {
-			cout << str << " is locked" << endl;
+			cout << str << " is locked." << endl;
 		}
 		else {
 			cout << "Walking to " << str << "..." << endl;
-			this->location = exit->GetDestination();
+			location = exit->GetDestination();
 			DescribeCurrentRoom();
 			moved = true;
 		}
 	}
 
 	if (!moved)
-		cout << "You can't go to " << str << endl;
+		cout << "You can't go to " << str << "." << endl;
 
 }
 
 void Player::Take(const string& str) {
 
 	// Search for items
-	Item* item = GetItemFromName(str, location->contains);
+	Item* item = GetEntityFromName<Item>(str, location->contains, EntityType::ITEM);
 
-	if (item == NULL) {
-		cout << "You can't take " << str << endl;
+	if (item == nullptr) {
+		cout << "You can't take " << str << "." << endl;
 	}
 	else {
 		if (item->GetItemType() == ItemType::WEAPON) {
 
 			Item* holder = GetItemFromType(ItemType::HOLDER);
 
-			// Si no tenemos un holder, necesitamos un scabbard
-			if (holder == NULL) {
-				cout << "You need to have a holder to take this " << str << endl;
+			// If we don't have a holder, we need one (scabbard) 
+			if (holder == nullptr) {
+				cout << "You need to have a holder to take this " << str << "." << endl;
 				return;
 			}
 			else {
@@ -126,20 +144,20 @@ void Player::Take(const string& str) {
 			}
 		}
 
-		this->contains.push_back(item);
-		this->location->contains.remove(item);
-		cout << "You now have a " << str << endl;
+		contains.push_back(item);
+		location->contains.remove(item);
+		cout << "You now have a " << str << "." << endl;
 	}
-	
+
 }
 
 void Player::Drop(const string& str) {
 
 	// Search for items
-	Item* item = GetItemFromName(str);
+	Item* item = GetEntityFromName<Item>(str, contains, EntityType::ITEM);
 
-	if (item == NULL) {
-		cout << "You can't drop a " << str << endl;
+	if (item == nullptr) {
+		cout << "You can't drop a " << str << "." << endl;
 	}
 	else {
 		// Check if equipped
@@ -149,22 +167,22 @@ void Player::Drop(const string& str) {
 
 		// Check for parent
 		Entity* parent = item->GetParent();
-		if (parent != NULL) {
+		if (parent != nullptr) {
 			parent->Remove(item);
-			item->SetParent(NULL);
+			item->SetParent(nullptr);
 		}
 
 		// Check if childs
 		for (Entity* child : item->contains) {
-			this->contains.remove(child);
-			this->location->contains.push_back(child);
-			cout << "You dropped a " << child->GetName() << endl;
+			contains.remove(child);
+			location->contains.push_back(child);
+			cout << "You dropped a " << child->GetName() << "." << endl;
 		}
 
 		item->contains.clear();
-		this->contains.remove(item);
-		this->location->contains.push_back(item);
-		cout << "You dropped a " << str << endl;
+		contains.remove(item);
+		location->contains.push_back(item);
+		cout << "You dropped a " << str << "." << endl;
 	}
 
 }
@@ -172,16 +190,16 @@ void Player::Drop(const string& str) {
 void Player::Equip(const string& str) {
 
 	// Search for items
-	Item* item = GetItemFromName(str);
+	Item* item = GetEntityFromName<Item>(str, contains, EntityType::ITEM);
 
-	if (item == NULL) {
-		cout << "You can't equip a " << str << endl;
+	if (item == nullptr) {
+		cout << "You can't equip a " << str << "." << endl;
 	}
 	else {
-		if (GetHoldingItem() != NULL)
-			cout << "Switched " << GetHoldingItem()->GetName() << " for " << item->GetName() << endl;
+		if (GetHoldingItem() != nullptr)
+			cout << "Switched " << GetHoldingItem()->GetName() << " for " << item->GetName() << "." << endl;
 		SetHoldingItem(item);
-		cout << "Equipped a " << item->GetName() << endl;
+		cout << "Equipped a " << item->GetName() << "." << endl;
 	}
 
 }
@@ -189,25 +207,68 @@ void Player::Equip(const string& str) {
 void Player::Unequip(const string& str) {
 
 	// Search for items
-	Item* item = GetItemFromName(str);
+	Item* item = GetEntityFromName<Item>(str, contains, EntityType::ITEM);
 
-	if (item == NULL) {
-		cout << "You can't unequip a " << str << endl;
+	if (item == nullptr) {
+		cout << "You can't unequip a " << str << "." << endl;
 	}
 	else {
 		if (GetHoldingItem() == item) {
-			cout << "Unequipped a " << item->GetName() << endl;
-			SetHoldingItem(NULL);
+			cout << "Unequipped a " << item->GetName() << "." << endl;
+			SetHoldingItem(nullptr);
 		}
 		else {
-			cout << "You are not holding a " << item->GetName() << endl;
+			cout << "You are not holding a " << item->GetName() << "." << endl;
 		}
 	}
 
 }
 
-void Player::Attack(const string& str) {
+bool Player::Attack(const string& str) {
+	bool gameOver = false;
 
+	// Search monster
+	Monster* monster = GetMonsterFromCurrentRoom();
+
+	if (monster == nullptr) {
+		cout << "Nothing to attack in this room." << endl;
+	}
+	else {
+
+		if (str == Globals::toLowercase(monster->GetName())) {
+			cout << "The room is dark, you don't see where the " << monster->GetName() << " is. Specify a direction to attack it." << endl;
+		}
+		else {
+
+			// Check valid direction
+			Direction* dir = Globals::strToDir(str);
+
+			if (dir == nullptr) {
+				cout << "You can't attack " << str << "." << endl;
+			}
+			else {
+
+				Item* weapon = GetItemFromType(ItemType::WEAPON);
+
+				if (weapon == nullptr) {
+					cout << "You don't have a weapon to attack." << endl;
+				}
+				else {
+					if (weapon == GetHoldingItem()) {
+						monster->Attack(dir);
+						if (monster->IsDead()) {
+							cout << "CONGRATULATIONS! YOU BEAT THE GAME!" << endl;
+							gameOver = true;
+						}
+					}
+					else
+						cout << "You need to equip a weapon to attack." << endl;
+				}
+			}
+		}
+	}
+
+	return gameOver;
 }
 
 void Player::Lock(const string& str) {
@@ -217,8 +278,8 @@ void Player::Lock(const string& str) {
 		Direction* direction = Globals::strToDir(str);
 		Exit* exit = GetExitFromDirection(str);
 
-		if (exit == NULL) {
-			cout << "There is no exit in " << str << endl;
+		if (exit == nullptr) {
+			cout << "There is no exit in " << str << "." << endl;
 		}
 		else {
 
@@ -227,24 +288,24 @@ void Player::Lock(const string& str) {
 				// Search for items
 				Item* key = GetItemFromType(ItemType::KEY);
 
-				if (key == NULL) {
-					cout << "You don't have a key to lock the exit" << endl;
+				if (key == nullptr) {
+					cout << "You don't have a key to lock the exit." << endl;
 				}
 				else {
 					// Check if key is equipped
 					if (key == GetHoldingItem()) {
-						cout << str << " locked" << endl;
+						cout << str << " locked." << endl;
 						exit->SetLocked(true);
 					}
-					else cout << "You are not holding a key" << endl;
-				}					
+					else cout << "You are not holding a key." << endl;
+				}
 			}
-			else cout << str << " is already locked" << endl;
+			else cout << str << " is already locked!" << endl;
 		}
 
 	}
 	else {
-		cout << "Parameter must be a direction (north, east, south, west)" << endl;
+		cout << "Parameter must be a direction." << endl;
 	}
 }
 
@@ -255,8 +316,8 @@ void Player::Unlock(const string& str) {
 		Direction* direction = Globals::strToDir(str);
 		Exit* exit = GetExitFromDirection(str);
 
-		if (exit == NULL) {
-			cout << "There is no exit in " << str << endl;
+		if (exit == nullptr) {
+			cout << "There is no exit in " << str << "." << endl;
 		}
 		else {
 
@@ -265,76 +326,77 @@ void Player::Unlock(const string& str) {
 				// Search for items
 				Item* key = GetItemFromType(ItemType::KEY);
 
-				if (key == NULL) {
-					cout << "You don't have a key to unlock the exit" << endl;
+				if (key == nullptr) {
+					cout << "You don't have a key to unlock the exit." << endl;
 				}
 				else {
 					// Check if key is equipped
 					if (key == GetHoldingItem()) {
-						cout << str << " unlocked" << endl;
+						cout << str << " unlocked." << endl;
 						exit->SetLocked(false);
 					}
-					else cout << "You are not holding a key" << endl;
+					else cout << "You are not holding a key." << endl;
 				}
 			}
-			else cout << str << " is already unlocked" << endl;
+			else cout << str << " is already unlocked!" << endl;
 		}
 
 	}
 	else {
-		cout << "Parameter must be a direction (north, east, south, west)" << endl;
+		cout << "Parameter must be a direction." << endl;
 	}
 }
 
 void Player::Loot(const string& str) {
-	// Mirar que sea un parametro valido y coincida con el nombre del npc
-	// Si no tiene items, "nothing to loot" y sino, nos copiamos todo de su lista a nuestra y le borramos la suya
 	bool foundNpc = false;
 
-	for (Entity *e : location->contains) {
+	for (Entity* e : location->contains) {
 
-		// Si esta en la room y coincide nombre hacer look
+		// If it's in the room and it has the same name
 		if (e->GetType() == EntityType::NPC) {
 
 			class NPC* npc = (class NPC*)e;
 
 			string npcName = Globals::toLowercase(npc->GetName());
-			if (npcName.compare(str) == 0) {
+			if (npcName == str) {
 				foundNpc = true;
 
 				if (!npc->contains.empty()) {
-					this->contains.insert(this->contains.end(), npc->contains.begin(), npc->contains.end());
+					contains.insert(contains.end(), npc->contains.begin(), npc->contains.end());
 					cout << "You have looted from " << str << ":" << endl;
 					Show(npc->contains, EntityType::ITEM);
 					npc->contains.clear();
 				}
-				else cout << "Nothing to loot from " << str << endl;
+				else cout << "Nothing to loot from " << str << "." << endl;
 				break;
 			}
 		}
 	}
 
 	if (!foundNpc)
-		cout << "No NPCs found in this room" << endl;
+		cout << "You can't loot from " << str << "." << endl;
 }
 
-Item * Player::GetHoldingItem() const {
-	return holdingItem;
+void Player::Talk(const string& str) {
+	class NPC* npc = GetEntityFromName<class NPC>(str, location->contains, EntityType::NPC);
+
+	if (npc == nullptr) {
+		cout << "You can't talk to " << str << "." << endl;
+	}
+	else {
+		cout << npc->GetDialogue() << endl;
+	}
 }
 
-void Player::SetHoldingItem(Item * item) {
-	holdingItem = item;
-}
-
-Exit * Player::GetExitFromDirection(const Direction& dir) const {
-	Exit* exit = NULL;
+Exit* Player::GetExitFromDirection(const Direction& dir) const {
+	Exit* exit = nullptr;
 
 	// Search for exits
-	for (Entity *e : this->location->contains) {
+	for (Entity* e : location->contains) {
 
 		if (e->GetType() == EntityType::EXIT) {
 
-			// Mirar cada tipo de comand NORTH, WEST, EAST, SOUTH sea igual al de la exit
+			// Look at each type of direction parameter (NORTH, WEST, EAST, SOUTH) 
 			if (dir == ((Exit*)e)->GetDirection()) {
 				exit = (Exit*)e;
 				break;
@@ -345,47 +407,56 @@ Exit * Player::GetExitFromDirection(const Direction& dir) const {
 	return exit;
 
 }
-Exit * Player::GetExitFromDirection(const string& str) const {
-	return Globals::isDir(str) ? GetExitFromDirection(*Globals::strToDir(str)) : NULL;
+
+Exit* Player::GetExitFromDirection(const string& str) const {
+	return Globals::isDir(str) ? GetExitFromDirection(*Globals::strToDir(str)) : nullptr;
 }
 
-Item * Player::GetItemFromName(const string& name) const {
-	return GetItemFromName(name, this->contains);
-}
+template <class T>
+T* Player::GetEntityFromName(const string& name, const list<Entity*>& entities, const EntityType type) const {
+	T* entity = nullptr;
 
-Item * Player::GetItemFromName(const string& name, const list<Entity*>& entities) const {
-	Item *item = NULL;
+	// Search for entities
+	for (Entity* e : entities) {
 
-	// Search for items
-	for (Entity *e : entities) {
+		if (e->GetType() == type) {
 
-		if (e->GetType() == EntityType::ITEM) {
-
-			string itemName = Globals::toLowercase(e->GetName());
-
-			if (itemName.compare(name) == 0) {
-				item = (Item*)e;
+			string entityName = Globals::toLowercase(e->GetName());
+			if (entityName == name) {
+				entity = (T*)e;
+				break;
 			}
 		}
 	}
-	return item;
+
+	return entity;
 }
 
-Item * Player::GetItemFromType(ItemType type) {
-	Item *item = NULL;
+Item* Player::GetItemFromType(ItemType type) const {
+	Item* item = nullptr;
 
 	// Search for items
-	for (Entity *e : this->contains) {
+	for (Entity* e : contains) {
 
 		if (e->GetType() == EntityType::ITEM && ((Item*)e)->GetItemType() == type) {
-
-			//string itemName = Globals::toLowercase(e->GetName());
-
-			//if (itemName.compare(name) == 0) {
 			item = (Item*)e;
 			break;
-			//}
 		}
 	}
 	return item;
+}
+
+Monster* Player::GetMonsterFromCurrentRoom() const {
+	Monster* monster = nullptr;
+
+	// Search for entities
+	for (Entity* e : location->contains) {
+
+		if (e->GetType() == EntityType::MONSTER) {
+			monster = (Monster*)e;
+			break;
+		}
+	}
+
+	return monster;
 }
