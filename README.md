@@ -6,7 +6,7 @@ This is a replica in a small version of the classic text adventure game "Zork" b
     <img alt="Made With C++" src="https://img.shields.io/badge/made%20with-C++-57b9d3.svg?logo=CPlusPlus">
   </a>
   <a>
-    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/Zork?&logo=github">
+    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/Zork?logo=github">
   </a>
   <a>
     <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JoanStinson/Zork?logo=Mapbox&color=orange">
