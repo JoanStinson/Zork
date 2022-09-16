@@ -1,7 +1,26 @@
 # C++ Simple Zork Game
 This is a replica in a small version of the classic text adventure game "Zork" by Infocom (1977). 
-Game created by [Joan Ginard Mateo](https://github.com/JoanStinson).
-Repository can be found [here](https://github.com/JoanStinson/Zork).
+
+<p align="center">
+  <a>
+    <img alt="Made With C++" src="https://img.shields.io/badge/made%20with-C++-57b9d3.svg?logo=CPlusPlus">
+  </a>
+  <a>
+    <img alt="License" src="https://img.shields.io/github/license/JoanStinson/Zork?&logo=github">
+  </a>
+  <a>
+    <img alt="Last Commit" src="https://img.shields.io/github/last-commit/JoanStinson/Zork?logo=Mapbox&color=orange">
+  </a>
+  <a>
+    <img alt="Repo Size" src="https://img.shields.io/github/repo-size/JoanStinson/Zork?logo=VirtualBox">
+  </a>
+  <a>
+    <img alt="Downloads" src="https://img.shields.io/github/downloads/JoanStinson/Zork/total?color=brightgreen">
+  </a>
+  <a>
+    <img alt="Last Release" src="https://img.shields.io/github/v/release/JoanStinson/Zork?include_prereleases&logo=Dropbox&color=yellow">
+  </a>
+</p>
 
 ## Game Map
 ![](GameMap.jpg)
