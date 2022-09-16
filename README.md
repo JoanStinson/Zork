@@ -1,4 +1,4 @@
-# C++ Simple Zork Game
+# Zork
 This is a replica in a small version of the classic text adventure game "Zork" by Infocom (1977). 
 
 <p align="center">
